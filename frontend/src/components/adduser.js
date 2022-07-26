@@ -2,21 +2,21 @@ import { useState, useEffect } from "react";
 import { ListGroup, Card, Button, Form } from "react-bootstrap";
 import API from "../api";
 
-const AddMovie = ({ onAdd }) => {
+const AddUser = ({ onAdd }) => {
   const [name, setName] = useState("");
-  const [genre, setGenre] = useState("");
-  const [starring, setStarring] = useState("");
-  const [movieId, setMovieId] = useState(null);
-  const [movies, setMovies] = useState([]);
+  const [email, setEmail] = useState("");
+  const [address, setAddress] = useState("");
+  const [userId, setUserId] = useState(null);
+  const [movies, setUsers] = useState([]);
 
   useEffect(() => {
-    refreshMovies();
+    refreshUsers();
   }, []);
 
-  const refreshMovies = () => {
-    API.get("movies/")
+  const refreshUsers = () => {
+    API.get("users/")
       .then((res) => {
-        setMovies(res.data);
+        setUsers(res.data);
         // setName(res[0].name)
         // setGenre(res[0].genre)
         // setStarring(res[0].starring)
@@ -27,35 +27,35 @@ const AddMovie = ({ onAdd }) => {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    let item = { name, genre, starring };
-    API.post("movies/", item).then(() => refreshMovies());
+    let item = { name, email, address };
+    API.post("users/", item).then(() => refreshUsers());
   };
 
   const onUpdate = (id) => {
-    let item = { name, genre, starring }; 
-    API.patch(`movies/${id}/`, item).then((res) => refreshMovies());
+    let item = { name, email, address };
+    API.patch(`users/${id}/`, item).then((res) => refreshUsers());
   };
 
   const onDelete = (id) => {
-    API.delete(`movies/${id}/`).then((res) => refreshMovies());
+    API.delete(`users/${id}/`).then((res) => refreshUsers());
   };
 
   function selectMovie(id) {
-    let item = movies.filter((movie) => movie.id === id)[0];
+    let item = movies.filter((user) => user.id === id)[0];
     setName(item.name);
-    setGenre(item.genre);
-    setStarring(item.starring);
-    setMovieId(item.id);
+    setEmail(item.email);
+    setAddress(item.address);
+    setUserId(item.id);
   }
 
   return (
     <div className="container mt-5">
       <div className="row">
         <div className="col-md-4">
-          <h3 className="float-left">Create a new Movie</h3>
+          <h3 className="float-left">Create a new User</h3>
           <Form onSubmit={onSubmit} className="mt-4">
             <Form.Group className="mb-3" controlId="formBasicName">
-              <Form.Label>{movieId}Name</Form.Label>
+              <Form.Label>{userId}Name</Form.Label>
               <Form.Control
                 type="text"
                 placeholder="Enter Name"
@@ -68,19 +68,19 @@ const AddMovie = ({ onAdd }) => {
               <Form.Label>Genre</Form.Label>
               <Form.Control
                 type="text"
-                placeholder="Enter Genre"
-                value={genre}
-                onChange={(e) => setGenre(e.target.value)}
+                placeholder="Enter Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
               />
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="formBasicStarring">
-              <Form.Label>Starring</Form.Label>
+              <Form.Label>Address</Form.Label>
               <Form.Control
                 type="text"
                 placeholder="Enter Starring"
-                value={starring}
-                onChange={(e) => setStarring(e.target.value)}
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
               />
             </Form.Group>
 
@@ -96,7 +96,7 @@ const AddMovie = ({ onAdd }) => {
               <Button
                 variant="primary"
                 type="button"
-                onClick={() => onUpdate(movieId)}
+                onClick={() => onUpdate(userId)}
                 className="mx-2"
               >
                 Update
@@ -109,23 +109,23 @@ const AddMovie = ({ onAdd }) => {
             <thead>
               <tr>
                 <th scope="col">#</th>
-                <th scope="col">Movie Name</th>
-                <th scope="col">Genre</th>
-                <th scope="col">Starring</th>
+                <th scope="col">User Name</th>
+                <th scope="col">Email</th>
+                <th scope="col">Address</th>
                 <th scope="col"></th>
               </tr>
             </thead>
             <tbody>
-              {movies.map((movie, index) => {
+              {movies.map((user, index) => {
                 return (
-                  <tr key={movie.id}>
-                    <th scope="row">{movie.id}</th>
-                    <td> {movie.name}</td>
-                    <td>{movie.genre}</td>
-                    <td>{movie.starring}</td>
+                  <tr key={user.id}>
+                    <th scope="row">{user.id}</th>
+                    <td> {user.name}</td>
+                    <td>{user.email}</td>
+                    <td>{user.address}</td>
                     <td>
-                        <button className="btn btn-primary" onClick={() => selectMovie(movie.id)}>Update</button>
-                        <button className="btn btn-danger" onClick={() => onDelete(movie.id)}>Delete</button>
+                        <button className="btn btn-primary" onClick={() => selectMovie(user.id)}>Update</button>
+                        <button className="btn btn-danger" onClick={() => onDelete(user.id)}>Delete</button>
                     </td>
                   </tr>
                 );
@@ -138,4 +138,4 @@ const AddMovie = ({ onAdd }) => {
   );
 };
 
-export default AddMovie;
+export default AddUser;
